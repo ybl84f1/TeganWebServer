@@ -30,6 +30,7 @@ What TWS is not useful for:
 REQUIREMENTS:
 * Intel Edison connected to a network via built-in WiFi
 * SD Card for HTML file storage
+ 
 OPTIONAL:
 * Grove Expansion kit with temperature sensor on A0
 * Grove buzzer on D4
