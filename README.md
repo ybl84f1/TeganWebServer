@@ -26,3 +26,10 @@ What TWS is not useful for:
 * Hosting a high-volume web site.
 * Advanced web site services (e.g. SSL, CSS, Java)
 * Real-time applications
+
+REQUIREMENTS:
+* Intel Edison connected to a network via built-in WiFi
+* SD Card for HTML file storage
+OPTIONAL:
+* Grove Expansion kit with temperature sensor on A0
+* Grove buzzer on D4
