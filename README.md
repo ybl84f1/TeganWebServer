@@ -30,6 +30,8 @@ What TeganWS is not useful for:
 * Advanced web site services (e.g. SSL, CSS, Java)
 * Real-time applications
 
+Note: Ths software is still in beta form. The software is fully functional however it is not completely commented and some of the HTML tutorials have not been completed. Please send any comments/feedback my way.
+
 REQUIREMENTS:
 * Intel Edison connected to a network via built-in WiFi
 * SD Card for HTML file storage
