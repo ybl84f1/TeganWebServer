@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>tutorials.html</title>
+</head>
+<body bgcolor="#E6E6FA"><br>
+      <font size=6>Tegan Web Server - Tutorials</font><br><br>
+      <font size=3>
+<p>
+<u><font size=5>Tutorial #1 - Networking</font></u><br><br>
+For those who's excitment about getting the Tegan Web Server up and running is tempered by a fear
+or uncertanty of networking, here are some networking hints that may help get you pointed in the 
+right direction in making your TWS visible on your home network and optionally the Internet. This 
+is NOT a tutorial - networking is a big topic far beyond the my scope of my knowledge however I'll 
+share some simple basics that I've discovered along the way.
+<br><br>
+I will call out the things in this section that are unique to the Edison that you may not find on
+an Arduino board.
+<br><br>
+<b><u>Some Basics - Know Your IP Address</u></b>
+<br><br>
+IP Address...
+<br><br><br>
+</p>
+<p>
+<u><font size=5>Tutorial #2 - Making A Simple Web Page</font></u><br><br>
+<br>
+In this tutorial we create a simple web page and link to it from the existing "playground.html" page. The basic
+steps are:
+<br><ul>
+<li> Use a text editor to create a simple "Hello World" page.
+<li> Upload the page to the Edison SD Card.
+</ul>
+<br>
+<b>NOTE</b>: In order to display HTML tags in this tutorial without them being rendered on this page all tags 
+will have a "<b>.</b>" following the first character "<" of the tag. The period after the angle bracket kills
+the tag. For example the HTML tag for <b>font size</b> is written here as <b>"<.font size = 5>"</b> so that it 
+doesn't affect THIS page that you're reading now. Simply copy and paste the HTML code below and <u>remove the first 
+period after the "<" on each tag</u>.
+<br><br>
+<b>1)</b> Using a text editor on your PC - one that can save in a text-only format like Windows Notepad - create 
+the following file named "helloworld.html". Note the all lowercase spelling and ".html" extension.
+<br><br>
+<.!DOCTYPE html><br>
+<.html><br>
+<.head><br>
+  <.title>helloworld.html<./title><br>
+<./head><br>
+<.body bgcolor="#E6E6FA"><br>
+<.p><.font size=6><.center>Hello World!<./center><./font><./p><.br><.br><.br><br>
+<.br><.br><.br><.a href="/ ">Home Page<./a><br>
+<./body><br>
+<./html><br>
+<br>
+<b>2)<font size=4> REMEMBER TO REMOVE THE "." THAT FOLLOWS EACH "<" !!!</font></b> Also ensure that there is
+a space after the "/" in the "href="/ " tag.
+<br>
+<br>
+<b>3)</b> Test the file by opening it with a browser. You should see a colored page with a big "Hello World" 
+near the top and centered. Note that the "Home Page" link may not work correctly - that's okay.
+<br><br>
+<b>4)</b> At this point we want to get your file "helloworld.html" onto the Edison SD Card. There are several
+ways to do this:
+<br>
+<ul>
+<li> Go to the Home Page of the TWS web server and select "Uploads". After selecting the "helloworld.html" file 
+click on the "Submit" button. Note the screen will not change during uploading - BE PATIENT! Upon successful 
+upload you will be brought back to the TWS Home Page. If it fails it should be noted in the error log; try one 
+of the next methods.
+<br><br>
+<li> Use a SSH utility with file transfer capability such as Bitvise and upload the file to the SD Card root directory.
+<br><br>
+<li> Power down the Edison and use an SD card reader to copy the file.
+</ul>
+<br>
+<br>
+<b>5)</b> Once your file is uploaded, go to the "Playground" link off the main page. You will see a link to
+"Hello World" which up until now was a dead link. Clicking on it will take you to your new page! If you 
+get a "404" error hit the back button, hover your mouse over the link and make sure the filename displayed 
+matches your filename exactly, and that your file is in the root directory of the SD Card.
+<br>
+<br>
+*** NOTE THE USE OF BROWSER VIEW SOURCE but not with substitution tags
+<br>
+<br>
+<br>
+</p>
+<p>
+<u><font size=5>Tutorial #3 - Simple Web Page with PIN TAG</font></u><br><br>
+In this tutorial we take what we learned in Tutorial #2 and add a Substitute Pin tag. If you have any inputs
+configured to a digital or analog input, go ahead and use them, otherwise we'll just read one of the analog
+in pins.
+<br>
+The basic steps are:
+<br><ul>
+<li> Use a text editor to create a simple "foobar.html" page similar to "helloworld.html".<br>
+<li> Add the Substitute Pin tags
+<li> Upload the page to the Edison SD Card.
+</ul>
+<br>
+<b>1)</b> Create a new file called "foobar.html" by making a copy of your "helloworld.html" file and call it 
+"foobar.html". Replace the text "Hello World" with "Hello Foobar" and change the <.title> to "foobar.html".
+<br><br>
+<b>2)</b> Add a new line after the "Hello Foobar" line and add the following tags (without the "."):
+<br>
+<.br><.br>Analog Input Pin 0 = <.%SPAIP0><br>
+<.br><.br>Digital Input Pin 3 = <.%SPDIP3><br>
+<br>
+(There is already a link on "playground.html" for "foobar.html").
+<br><br>
+<b>3)</b> Upload the file as described in Tutorial #2. Once your file is uploaded, go to the "Playground" 
+link off the main page. You will see a link to "foobar.html" which up until now was a dead link. Clicking on 
+it will take you to your new page! Notice the Substitution Tags have been replaced with readings.
+<br><br><br>
+</p>
+<p>
+<u><font size=5>Tutorial #4 - Simple Web Page with SUBSTITUTION TAG</font></u><br><br>
+
+<br><br><br>
+</p>
+<p>
+<u><font size=5>Tutorial #5 - Simple Web Page with SUBSTITUTION TAG and PAGE METHOD</font></u><br><br>
+
+<br><br><br>
+</p>
+<table border="1" style="width:100%">
+<tr>
+    <td><center><a href="/ ">HOME</a></center></td>
+    <td><center><a href="/about.html">ABOUT</a></center></td> 
+    <td><center><a href="/aboutfeatures.html">FEATURES</a></center></td>
+    <td><center><a href="/tutorials.html">TUTORIALS</a></center></td>
+</tr></table></body>
+<br><br>
+</html>
