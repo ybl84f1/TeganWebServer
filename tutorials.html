@@ -10,16 +10,118 @@
 <u><font size=5>Tutorial #1 - Networking</font></u><br><br>
 For those who's excitment about getting the Tegan Web Server up and running is tempered by a fear
 or uncertanty of networking, here are some networking hints that may help get you pointed in the 
-right direction in making your TWS visible on your home network and optionally the Internet. This 
-is NOT a tutorial - networking is a big topic far beyond the my scope of my knowledge however I'll 
-share some simple basics that I've discovered along the way.
-<br><br>
-I will call out the things in this section that are unique to the Edison that you may not find on
-an Arduino board.
+right direction in making your TWS visible on your home network and optionally the Internet. Despite
+the name this is NOT a tutorial - networking is a big topic far beyond the my scope of knowledge 
+however I'll share some simple basics that I've discovered along the way.
 <br><br>
 <b><u>Some Basics - Know Your IP Address</u></b>
 <br><br>
-IP Address...
+Your IP address is the network address of your device on your home network. It is used to to send 
+and receive messages to your computer and is almost always assigned by your home router. IP addresses
+have the form xxx.xxx.xxx.xxx, and in most cases start with 192.168.1.xxx where xxx is a unique
+number for all your IP devices in your home (computers, printers, Smart TVs, wireless printers, ...) So
+your laptop may be 192.168.1.12 and your networked Arduino may be 192.168.1.7. Your devices ask your
+router for an IP address when they boot and can get different IP addresses on different days.
+<br><br>
+Note that your neighbor's laptop may also have the address 192.168.1.12 in their home! How can they
+have the same address? Because the IP addresses are only used for your <b><u>local</u></b> home network.
+The same addresses are re-used millions of times in other households - it was actually designed this way!
+These addresses are not explicitly used for Internet traffic outside the home so there's no problem in 
+re-using them. In Windows if you launch the Command Prompt (in Win8 search for "cmd") you can type 
+in "ipconfig" and find your laptop's IP address.
+<br><br>
+<b><u>Accessing TeganWS Inside The Home</u></b>
+<br><br>
+The IP address of your Arduino or Edison is important since a browser (inside your home) needs to know 
+the address of the server to access the TeganWS web pages. Note that if the Tegan web server connects 
+successfully to the home network it will record it's IP address in "httplog.txt" file. You will use this 
+address instead of the typical URL (www.foobar.com) in the browser to get to the TeganWS.
+<br><br>
+That IP address will also need a port number added to it, specified in the TeganWS source by "TWSIPPORT" 
+which by default is <b>3232</b>. So for instance if your Arduino or Edison's IP address is 192.168.1.5 
+then in the browser address bar enter:
+<br><br>
+<b>192.168.1.5:3232</b>
+<br><br>
+to get to the main page of the TeganWS.
+<br><br>
+<b><u>Accessing TeganWS Outside The Home</u></b>
+<br><br>
+Note that this only works <b><u>within</u></b> the home because your IP address is only valid within your
+home network; accessing your TeganWS outside the home takes some more work and is covered in just a moment.
+BTW every website in the world uses a 4-octet numeric address! WHAT?...you say...I type in a text URL like
+"www.google.com" and not "a 4-octet" xxx.xxx.xxx.xxx number, and I NEVER type in a "port number"! So how does
+it work? It works because A) there are servers on the Internet that convert the name "www.google.com" to 
+a 4-octet number for you automatically and B) the default port number for web servers is 80 so your browser 
+tacks that on to the address for you automatically.
+<br><br>
+A handy "tool" to have in your toolbox is to be able to log into your home router. Many home routers can be 
+reached at "192.168.1.1" - try entering that into your browser (at home) and see if you get a login prompt.
+Once logged in most routers allow you to view what IP address are assigned to which devices in your home 
+as well as letting you control other settings which may be needed for accessing your Arduino web server 
+from outside the home. Look at the documentation that came with your router for how to log into it.
+<br><br>
+We just mentioned that your Arduino's or Edison's IP address is only valid within the home, so how do you make
+your TeganWS visible on the Internet? This is a little more complicated than making it visible inside the home 
+and the exact steps will vary depending on several factors but I'll cover the fundamental principle of it. Note 
+that you <b>WILL</b> have to be able to log into your router to enable this.
+<br><br>
+Remember we said the IP address is only valid inside the home? So when your laptop accesses a web site outside 
+the home, how does the web site know where to send the return information to? A web server can't return the 
+web page to your laptop's IP address of 192.168.1.12 because there are millions of those addresses in millions
+of homes!
+<br><br>
+What happens is when your laptop makes the web page request from www.google.com and uses it's address 
+of 192.168.1.12, the request passes through your home router before it goes out to the Internet. Remember the 
+router DOES HAVE a unique address on the Internet - say for example it's 281.68.113.414. When the request from 
+your laptop passes through the router the router "remembers" the request, adds it's own address to the message
+and sends it off to the web site. The web site then sends the return information to the router at 
+281.68.113.414, and when the router receives the packet it looks up which device on the home network originally 
+sent it (192.168.1.12) and directs it to your laptop. This router service is called <b>Network Address Traversal 
+(NAT)</b>. 
+<br><br>
+But things are different when the web server is inside your home and you're accessing it from outside the home. 
+Using the above example, if you're outside your home you can't request data from 281.68.113.414 because that's 
+your router and your router has no idea which of your many home devices (your laptop, Smart TV, Arduino, etc) to 
+pass the request on to! And you can't request data from 192.168.1.12 because that is the address of millions 
+of other devices in millions of other homes (not to mention that it is a local in-home address and not visible 
+anywhere on the Internet!) The problem is that NAT only works when the web page request goes from inside the 
+home to outside, but not the other way around. However, there is a solution that works the other way around - 
+it's called <b>Port Forwarding</b>.
+<br><br>
+Remember that Port number (TeganWS default is 3232) that we used inside the home? We can use that and your
+router's <b>Port Forwarding</b> service to make your web server available from outside your home. You will need 4 
+things to make this happen:
+<br>
+<ul>
+<li> You need to be able to log into your router,
+<li> You need to know the public Internet IP address of your router,
+<li> You need to enable <b>Port Forwarding</b> in your router, and
+<li> You will need to know the IP address of your Arduino.
+</ul>
+So <b>Port Forwarding</b> works something like this: You configure your router to link a specified Port number, 
+say "3232", to an "inside-the-home" IP address, say "192.168.1.7". Now any request <b>to your router</b> at 
+(using the above example) 281.68.113.414:<b>3232</b> (note the appended port number) will be serviced not by your 
+router but instead will be "port forwarded" and passed on to the device at the local IP address of 192.168.1.7, 
+which is your web server! <b>Port Forwarding</b> links a request with a specific Port number to an in-the-home 
+IP address so requests from outside the home can access devices inside the home.
+<br><br>
+To get the public IP address of your router, log into it and check out the main page or the page that shows the 
+connection parameters to your ISP's modem device. How exactly to find this information is very different on 
+different routers so unfortunately I can't provide more guidance than what is here. It will be a 4-octet IP
+address and <b>will not be</b> 192.xxx.xxx.xxx.
+<br><br>
+When logged into the router you will also need to find where to configure Port Forwarding. The service will 
+typically ask you for A) the IP address you want to forward to (which is the IP address of your Arduino running 
+TeganWS) and B) the Port number (which defaults to "3232" in the TeganWS software).
+<br><br>
+One last note - remember that "inside-the-home" IP addresses (usually 192.168.1.xxx) get assigned when devices 
+boot and can stay the same for months or change often. If they change then this can be an issue with Port 
+Forwarding since you have to specify the IP address to forward to. So if you are able to access your TeganWS 
+one day and not the next, the Arduino's IP address may have changed. However your router has a solution to this 
+also! It can "lock" a certain IP address to a certain device; this is usually called something like "Address 
+Reservation" where you select the device and the IP address (for example 192.168.1.7) and bind them together. 
+This will prevent your Arduino's IP address from ever changing and not being accesible.
 <br><br><br>
 </p>
 <p>
@@ -28,12 +130,12 @@ IP Address...
 In this tutorial we create a simple web page and link to it from the existing "playground.html" page. The basic
 steps are:
 <br><ul>
-<li> Use a text editor to create a simple "Hello World" page.
+<li> Use a text editor to create a simple "Hello World" HTML web page.
 <li> Upload the page to the Edison SD Card.
 </ul>
 <br>
 <b>NOTE</b>: In order to display HTML tags in this tutorial without them being rendered on this page all tags 
-will have a "<b>.</b>" following the first character "<" of the tag. The period after the angle bracket kills
+will have a "<b>.</b>" following the first character "<" of the tag. The period after the angle bracket disables 
 the tag. For example the HTML tag for <b>font size</b> is written here as <b>"<.font size = 5>"</b> so that it 
 doesn't affect THIS page that you're reading now. Simply copy and paste the HTML code below and <u>remove the first 
 period after the "<" on each tag</u>.
@@ -52,12 +154,13 @@ the following file named "helloworld.html". Note the all lowercase spelling and 
 <./body><br>
 <./html><br>
 <br>
-<b>2)<font size=4> REMEMBER TO REMOVE THE "." THAT FOLLOWS EACH "<" !!!</font></b> Also ensure that there is
+<b>2)<font size=3> REMEMBER TO REMOVE THE "." THAT FOLLOWS EACH "<" !!!</font></b> Also ensure that there is
 a space after the "/" in the "href="/ " tag.
 <br>
 <br>
-<b>3)</b> Test the file by opening it with a browser. You should see a colored page with a big "Hello World" 
-near the top and centered. Note that the "Home Page" link may not work correctly - that's okay.
+<b>3)</b> You can test the file by opening it with a browser, either by using "File/Open" or double-clicking 
+on it in you file manager. You should see a colored page with a big "Hello World" near the top and centered. Note 
+that the "Home Page" link may not work correctly - that's okay right now.
 <br><br>
 <b>4)</b> At this point we want to get your file "helloworld.html" onto the Edison SD Card. There are several
 ways to do this:
@@ -80,7 +183,9 @@ get a "404" error hit the back button, hover your mouse over the link and make s
 matches your filename exactly, and that your file is in the root directory of the SD Card.
 <br>
 <br>
-*** NOTE THE USE OF BROWSER VIEW SOURCE but not with substitution tags
+<b>NOTE</b> that several browsers like MS Internet Explorer and Google Chrome have the ability to show the HTML 
+code of a web page. This can be handy to see what is actually being sent to your browser. For instance, in 
+Chrome go to Options/More Tools/View Source to see the HTML for the page that you are on.
 <br>
 <br>
 <br>
@@ -90,7 +195,7 @@ matches your filename exactly, and that your file is in the root directory of th
 In this tutorial we take what we learned in Tutorial #2 and add a Substitute Pin tag. If you have any inputs
 configured to a digital or analog input, go ahead and use them, otherwise we'll just read one of the analog
 in pins.
-<br>
+<br><br>
 The basic steps are:
 <br><ul>
 <li> Use a text editor to create a simple "foobar.html" page similar to "helloworld.html".<br>
@@ -114,13 +219,103 @@ it will take you to your new page! Notice the Substitution Tags have been replac
 <br><br><br>
 </p>
 <p>
-<u><font size=5>Tutorial #4 - Simple Web Page with SUBSTITUTION TAG</font></u><br><br>
+<u><font size=5>Tutorial #4 - Simple Web Page with a LIST TAG and PAGE METHOD</font></u><br><br>
+In this last tutorial we pull out all the stops and create a Page Method to perform a calculation and use 
+a Substitute List tag to display it. The basic steps of this tutorial are:
+<br><ul>
+<li> Create a Method that generates a random number and two substitution strings.
+<li> Create a HTML web page that includes Substitution List Tags.
+<li> Modify the TeganWS to link the new Method to the new web page
+</ul>
+<br>
+For this exercise you will have to modify the TeganWS code in a few places, so fire up your Arduino IDE 
+and locate the following in the code:
+<br><ul>
+<li> The declaration "char substitute_data[5][MAXSUBCOL];" at the beginning of the file,
+<li> The declaration "void http_verb_get(char URL[])" about halfway through the file, and
+<li> Find "void environmentalhtml()" because we'll put our new Method right after that.
+</ul>
+<br><br>
+The following Method will generate a random number and generate a string that indicates whether it's odd 
+or even. Add the following after "environmentalhtml()":
+<br><br> <b>
+void oddorevenhtml() {<br>
+  long i;<br>
+  i = random(100);<br>
+  sprintf(&substitute_data[0][0], "%d", i);<br>
+  if ((i % 2) == 0) {<br>
+    strncpy(&substitute_data[1][0], "even", 5);<br>
+  } else strncpy(&substitute_data[1][0], "odd", 4);<br>
+  stream_html_file("oddoreven.html");<br>
+  return;<br>
+}</b><br>
+<br>
+Note the global array "substitute_data[5][MAXSUBCOL]" is a global 2 dimensional char array and you must 
+be careful of a few things:
+<br><ul>
+<li> The number of strings cannot exceed the first array dimension, in this case 6 (0 - 5). Of course you can 
+always change this.
+<li> The number of characters in each string must not exceed "MAXSUBCOL" and must be null ('\0') terminated.
+</ul>
+Also note that there is a procedure call you must make at the end of your Method. You must call 
+"<b>stream_html_file("oddoreven.html");</b>" with the name of your HTML web page.
+<br><br>
+Next - let's create an HTML web page to display the random number. <b>(REMEMBER to remove the "." after 
+each "<")</b>:
+<br><br><b>
+<.!DOCTYPE html><br>
+<.html><br>
+<.head><br>
+  <.title>oddoreven.html<./title><br>
+<./head><br>
+<.body bgcolor="#E6E6FA"><br>
+  <.p><.font size=6><.center>Tegan Web Server<./center><./font><./p><br>
+<.br><br>
+  The random number <.%SL0> is <.%SL1>.<br>
+  <.br><.br><.br><.br><.br><.a href="/ ">Home Page<./a><br>
+  <.br><.br><.br>*This web site powered by a single Intel Edison computer!<.br><br>
+<./body><br>
+<./html></b><br>
+<br><br>
+Now all we have to do is link the "<b>oddoreven.html</b>" web page to the "<b>oddorevenhtml()</b>" method and 
+we'll be all set. Look in the program for "<b>void http_verb_get</b>" and do the following:
+<ul>
+<li> Look for the declaration "<b>const char *htmllist[6];</b>" and increase the 6 to 7;
+<li> The htmllist[5] should read: htmllist[5] = "oddoreven.html";
+<li> The htmllist[6] should read: htmllist[6] = NULL;
+<li> Go down just a bit and find "switch (k)" and add
+<br><br><b>
+      case 5:<br>
+      oddorevenhtml();<br>
+      break;</b><br>
+</ul>
+<br>
+Note the index into <b>htmllist</b> (in this example '5') <b><u>MUST MATCH</u></b> the <b>case</b> statement.
+<br><br>
+With these steps you have added the actual filename to look for and linked it to the Method used to process 
+the data. Now load the new code into your Arduino and use the "Upload" feature to upload your new 
+"oddoreven.html" web page to the Tegan Web Server. You should now be able to go to the Playground and 
+see your new page in action! Keep hitting "refresh" on your browser to see the number change.
+<br><br>
+So let's review what we've done:
+<br><ul>
+<li> You created a Method which calculated a random number, converted that number to a string and copied that 
+string to the 0th index of the substitution_data array, which corresponds to List Tag <.%SL0>.
+<li> Your code determines if the random number is odd or even and copies the appropriate string ("odd" or 
+"even") into the 1st index of the substitution_data array which corresponds to List Tag <.%SL1>
+<li> The web page prints out the number using Substitution List Tag <.%SL0> followed by the next List 
+Tag <.%SL1) which been replaced with either the string "odd" or "even".
+<li> You linked the Method to the web page name in "<b>void http_verb_get(char URL[])</b>" so when that page 
+is requested it calls your Method.
+</ul>
 
-<br><br><br>
-</p>
-<p>
-<u><font size=5>Tutorial #5 - Simple Web Page with SUBSTITUTION TAG and PAGE METHOD</font></u><br><br>
-
+<br><br>
+Lastly, if your Method needs access to the parameters passed in the HTTP "GET" command take a look at 
+the function "<b>iocontrolhtml(char httpparams[])</b>" and how it is called from "<b>void http_verb_get</b>". 
+The passed parameter "<b>char httpparams[]</b>" is a null-terminated character array that contains the 
+URL string starting with any characters after '?'. For instance, on the I/O Control Page if you set Pin 13 to 
+"LOW" the URL passed to TeganWS is "<b>XXX.XXX.XXX.XXX:YYYY/iocontrol.html?D13=L</b>". This allows your Method 
+to receive and parse a URL with passed parameters.
 <br><br><br>
 </p>
 <table border="1" style="width:100%">
